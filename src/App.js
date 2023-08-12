@@ -1,33 +1,36 @@
 import "./App.css"
-import { useGoogleLogin } from "@react-oauth/google"
-import axios from "axios"
 import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google"
+import axios from "axios"
 
-const handleLogin = async (credentialResponse) => {
-  //     var obj = jwtDecode(credentialResponse.credential);
-  //     var data = JSON.stringify(obj);
-  //     console.log(data);
-  //     const dat = {your data to send to server};
-  //     const config = {
-  //       method: 'POST',
-  //       url: 'your backend server or endpoint',
-  //       headers: {},
-  //       data: data
-  //     }
-  //   await axios(config)
-}
+// const googleLogin = useGoogleLogin({
+//   flow: "auth-code",
+//   onSuccess: async (codeResponse) => {
+//     console.log(codeResponse)
+//     const tokens = await axios.post("http://localhost:3001/auth/google", {
+//       code: codeResponse.code,
+//     })
 
+//     console.log(tokens)
+//   },
+//   onError: (errorResponse) => console.log(errorResponse),
+// })
 function App() {
   return (
     <div className="App">
       <GoogleOAuthProvider clientId="1020662799832-cmrbtimms5e3221vvchsu9td7egsuq5q.apps.googleusercontent.com">
         <GoogleLogin
-          onSuccess={handleLogin}
+          onSuccess={async (credentialResponse) => {
+            console.log(credentialResponse)
+            const tokens = await axios.post("http://localhost:3000", {
+              code: credentialResponse.code,
+            })
+
+            console.log(tokens)
+          }}
           onError={() => {
             console.log("Login Failed")
           }}
         />
-        ;
       </GoogleOAuthProvider>
     </div>
   )
